@@ -1,0 +1,5 @@
+﻿  Demux.cpp
+D:\study\goffmpeg\goffmpeg\include\libavutil\rational.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\study\goffmpeg\goffmpeg\Demux.cpp(44,19): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\study\goffmpeg\goffmpeg\Demux.cpp(49,19): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  goffmpeg.vcxproj -> D:\study\goffmpeg\x64\Debug\goffmpeg.exe

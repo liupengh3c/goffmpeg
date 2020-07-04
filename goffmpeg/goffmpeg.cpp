@@ -20,9 +20,10 @@ int main()
 	char input[5] = {};
 	int number = 0;
 
-	std::string msg = "all the funtions are:\n\
+	std::string msg = "All the funtions are:\n\
 	1. print ffmpeg informations.\n\
-	2. demux mp4 to aac+h264,you should input the mp4 path.";
+	2. demux mp4 to aac+h264,you should input the mp4 path.\n\
+	3. decode h264 to yuv420p.\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;

@@ -1,3 +1,6 @@
+/*
+	将mp4文件解封装为h264+aac
+*/
 #include "Demux.h"
 #include "iostream"
 extern "C"

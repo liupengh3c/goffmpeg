@@ -150,11 +150,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DecodeVideo.cpp" />
     <ClCompile Include="Demux.cpp" />
     <ClCompile Include="FFmpeg_Info.cpp" />
     <ClCompile Include="goffmpeg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DecodeVideo.h" />
     <ClInclude Include="Demux.h" />
     <ClInclude Include="FFmpeg_Info.h" />
   </ItemGroup>

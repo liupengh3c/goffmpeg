@@ -4,6 +4,7 @@
 #include <iostream>
 #include "FFmpeg_Info.h"
 #include "Demux.h"
+#include "DecodeVideo.h"
 
 int strToInt(char* p)
 {
@@ -46,6 +47,20 @@ int main()
 				std::cin >> path;
 				Demux* demux = new Demux();
 				demux->demux(path);
+				break;
+			}
+			case 3:
+			{
+				std::cout << "please input the h264 file path:";
+				std::string h264;
+				std::string yuv420;
+				std::cin >> h264;
+
+				std::cout << "please input the yuv420p file path:";
+				std::cin >> yuv420;
+				DecodeVideo* decode = new DecodeVideo();
+				decode->decode_video(h264, yuv420);
+				break;
 			}
 			default:
 				break;

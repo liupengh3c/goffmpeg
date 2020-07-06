@@ -23,7 +23,7 @@ int main()
 
 	std::string msg = "All the funtions are:\n\
 	1. print ffmpeg informations.\n\
-	2. demux mp4 to aac+h264,you should input the mp4 path.\n\
+	2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
 	3. decode h264 to yuv420p.\n";
 	while (true)
 	{

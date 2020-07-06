@@ -22,7 +22,7 @@ int Demux::demux(std::string filename)
 	AVPacket avpacket;
 
 	h264_file.append(filename).append(".h264");
-	aac_file.append(filename).append(".aac");
+	//aac_file.append(filename).append(".aac");
 
 	// 1、打开mp4文件
 	avformat_open_input(&ifmt_ctx, mp4, NULL, NULL);
@@ -35,7 +35,7 @@ int Demux::demux(std::string filename)
 	ret = avformat_alloc_output_context2(&h264_fmt_ctx, NULL, NULL, h264_file.data());
 
 	// 4、aac文件分配avformatcontext
-	ret = avformat_alloc_output_context2(&aac_fmt_ctx, NULL, NULL, aac_file.data());
+	//ret = avformat_alloc_output_context2(&aac_fmt_ctx, NULL, NULL, aac_file.data());
 
 	// 5、分别为h264、aac文件添加流
 	for (size_t i = 0; i < ifmt_ctx->nb_streams; i++)
@@ -48,6 +48,15 @@ int Demux::demux(std::string filename)
 		}
 		if (in_stream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
 		{
+			if (in_stream->codecpar->codec_id == AV_CODEC_ID_DTS)
+			{
+				aac_file.append(filename).append(".dts");
+			}
+			else
+			{
+				aac_file.append(filename).append(".aac");
+			}
+			avformat_alloc_output_context2(&aac_fmt_ctx, NULL, NULL, aac_file.data());
 			out_stream = avformat_new_stream(aac_fmt_ctx, NULL);
 			audio_index = i;
 		}

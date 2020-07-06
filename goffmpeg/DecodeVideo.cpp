@@ -137,4 +137,16 @@ int DecodeVideo::decode_video(std::string input_filename, std::string output_fil
 			}
 		}
 	}
+
+	/* flush the decoder */
+	decode(avcodec_ctx, frame, pkt, f_out);
+
+	fclose(f_in);
+	fclose(f_out);
+
+	av_parser_close(parser);
+	avcodec_free_context(&avcodec_ctx);
+	av_frame_free(&frame);
+	av_packet_free(&pkt);
+	return 0;
 }

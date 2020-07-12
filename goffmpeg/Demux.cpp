@@ -62,6 +62,7 @@ int Demux::demux(std::string filename)
 		}
 		if (out_stream)
 		{
+			// ¿½±´±àÂë²ÎÊý
 			avcodec_parameters_copy(out_stream->codecpar, in_stream->codecpar);
 		}
 	}

@@ -7,6 +7,8 @@ extern "C"
 }
 /*
 	本函数以解码h264文件为例，解码为yuv420p
+	没有使用av_read_frame函数,输入必须是只包含视频编码数据“裸流”（例如h264、HEVC码流文件）
+	而不能是包含封装格式的媒体数据（例如AVI、MKV、MP4）。
 */
 
 #define INBUF_SIZE 4096
@@ -60,6 +62,7 @@ int DecodeVideo::decode_video(std::string input_filename, std::string output_fil
 	AVCodecContext* avcodec_ctx = NULL;
 	AVPacket *pkt = NULL;
 	AVFrame* frame = NULL;
+	// 解析器上下文
 	AVCodecParserContext* parser = NULL;
 
 	FILE* f_in = NULL;
@@ -126,7 +129,9 @@ int DecodeVideo::decode_video(std::string input_filename, std::string output_fil
 		data = inbuf;
 		while (data_size > 0)
 		{
+			 // 输入必须是只包含视频编码数据“裸流”（例如H.264、HEVC码流文件），而不能是包含封装格式的媒体数据（例如AVI、MKV、MP4）。
 			ret = av_parser_parse2(parser, avcodec_ctx, &pkt->data, &pkt->size, data, data_size, AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0);
+			std::cout << "ret=" << ret << std::endl;
 			data += ret;
 			data_size -= ret;
 			

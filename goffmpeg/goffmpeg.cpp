@@ -5,6 +5,7 @@
 #include "FFmpeg_Info.h"
 #include "Demux.h"
 #include "DecodeVideo.h"
+#include "DecodeVideo2.h"
 
 int strToInt(char* p)
 {
@@ -24,7 +25,8 @@ int main()
 	std::string msg = "\n\nAll the funtions are:\n\
 	1. print ffmpeg informations.\n\
 	2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
-	3. decode h264 to yuv420p.\n";
+	3. decode h264 to yuv420p(av_parser_parser2).\n\
+	4. decode h264 to yuv420p(av_read_frame).\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -60,6 +62,19 @@ int main()
 				std::cin >> yuv420;
 				DecodeVideo* decode = new DecodeVideo();
 				decode->decode_video(h264, yuv420);
+				break;
+			}
+			case 4:
+			{
+				std::cout << "please input the media file path:";
+				std::string h264;
+				std::string yuv420;
+				std::cin >> h264;
+
+				std::cout << "please input the yuv420p file path:";
+				std::cin >> yuv420;
+				DecodeVideo2* decode = new DecodeVideo2();
+				decode->decode_video2(h264, yuv420);
 				break;
 			}
 			default:

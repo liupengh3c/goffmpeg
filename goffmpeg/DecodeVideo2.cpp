@@ -97,7 +97,7 @@ int DecodeVideo2::decode_video2(std::string input_filename, std::string output_f
 		return -2;
 	}
 
-	// 4、获取解码参数，支持mp4/H264文件
+	// 4、获取解码参数，支持mp4/H264文件,这几行代码非常重要，否则不能解码mp4到yuv
 	for (size_t i = 0; i < ifmt_ctx->nb_streams; i++)
 	{
 		if (ifmt_ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)

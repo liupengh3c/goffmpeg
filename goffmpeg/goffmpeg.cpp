@@ -6,6 +6,7 @@
 #include "Demux.h"
 #include "DecodeVideo.h"
 #include "DecodeVideo2.h"
+#include "DecodeAudio.h"
 
 int strToInt(char* p)
 {
@@ -26,7 +27,8 @@ int main()
 	1. print ffmpeg informations.\n\
 	2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
 	3. decode h264 to yuv420p(av_parser_parser2).\n\
-	4. decode h264 to yuv420p(av_read_frame).\n";
+	4. decode h264 to yuv420p(av_read_frame).\n\
+	5. decode dts to pcm(av_parser_parser2).\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -75,6 +77,19 @@ int main()
 				std::cin >> yuv420;
 				DecodeVideo2* decode = new DecodeVideo2();
 				decode->decode_video2(h264, yuv420);
+				break;
+			}
+			case 5:
+			{
+				std::cout << "please input the dts file path:";
+				std::string dts;
+				std::string pcm;
+				std::cin >> dts;
+
+				std::cout << "please input the pcm file path:";
+				std::cin >> pcm;
+				DecodeAudio* decode = new DecodeAudio();
+				decode->decode_audio(dts, pcm);
 				break;
 			}
 			default:

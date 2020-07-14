@@ -6,7 +6,7 @@ extern "C"
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 }
-int decode(AVCodecContext* ctx, AVPacket* pkt, AVFrame* frame, FILE* f)
+int DecodeVideo2::decode(AVCodecContext* ctx, AVPacket* pkt, AVFrame* frame, FILE* f)
 {
 	int ret = 0;
 	ret = avcodec_send_packet(ctx, pkt);

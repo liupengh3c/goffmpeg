@@ -28,7 +28,7 @@ int main()
 	2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
 	3. decode h264 to yuv420p(av_parser_parser2).\n\
 	4. decode h264 to yuv420p(av_read_frame).\n\
-	5. decode dts to pcm(av_parser_parser2).\n";
+	5. decode aac to pcm(av_parser_parser2).\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;

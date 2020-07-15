@@ -32,8 +32,10 @@ int  DecodeAudio::decode(AVCodecContext* dec_ctx, AVPacket* pkt, AVFrame* frame,
 		}
 
 		data_size = av_get_bytes_per_sample(dec_ctx->sample_fmt);
-		size_t unpadded_linesize = frame->nb_samples * av_get_bytes_per_sample(AVSampleFormat(frame->format));
+		// 计算每帧采样所需字节数
+		int unpadded_linesize = frame->nb_samples * av_get_bytes_per_sample(AVSampleFormat(frame->format));
 		av_samples_alloc_array_and_samples(&dst_data, &dst_linesize, av_get_channel_layout_nb_channels(frame->channel_layout), frame->nb_samples, AVSampleFormat(frame->format), 0);
+
 		swr_convert(swr_ctx, dst_data, frame->nb_samples, (const uint8_t**)frame->data, frame->nb_samples);
 		fwrite(dst_data[0], 1, unpadded_linesize, outfile);
 
@@ -132,7 +134,6 @@ int DecodeAudio::decode_audio(std::string input_filename, std::string output_fil
 		std::cout << "swr_init swr_ctx error,ret=" << ret << std::endl;
 		return -4;
 	}
-
 
 	while (!feof(f_in))
 	{

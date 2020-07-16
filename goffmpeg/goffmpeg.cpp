@@ -7,6 +7,7 @@
 #include "DecodeVideo.h"
 #include "DecodeVideo2.h"
 #include "DecodeAudio.h"
+#include "DecodeAudio2.h"
 
 int strToInt(char* p)
 {
@@ -27,8 +28,9 @@ int main()
 	1. print ffmpeg informations.\n\
 	2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
 	3. decode h264 to yuv420p(av_parser_parser2).\n\
-	4. decode h264 to yuv420p(av_read_frame).\n\
-	5. decode aac to pcm(av_parser_parser2).\n";
+	4. decode h264/mp4 to yuv420p(av_read_frame).\n\
+	5. decode aac to pcm(av_parser_parser2).\n\
+	6. decode aac/mp4 to pcm(av_read_frame).\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -81,7 +83,7 @@ int main()
 			}
 			case 5:
 			{
-				std::cout << "please input the dts file path:";
+				std::cout << "please input the aac file path:";
 				std::string dts;
 				std::string pcm;
 				std::cin >> dts;
@@ -90,6 +92,19 @@ int main()
 				std::cin >> pcm;
 				DecodeAudio* decode = new DecodeAudio();
 				decode->decode_audio(dts, pcm);
+				break;
+			}
+			case 6:
+			{
+				std::cout << "please input the media file path:";
+				std::string aac;
+				std::string pcm;
+				std::cin >> aac;
+
+				std::cout << "please input the pcm file path:";
+				std::cin >> pcm;
+				DecodeAudio2* decode = new DecodeAudio2();
+				decode->decode_audio2(aac, pcm);
 				break;
 			}
 			default:

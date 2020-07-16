@@ -144,7 +144,7 @@ int DecodeVideo::decode_video(std::string input_filename, std::string output_fil
 	}
 
 	/* flush the decoder */
-	decode(avcodec_ctx, frame, pkt, f_out);
+	decode(avcodec_ctx, frame, NULL, f_out);
 
 	fclose(f_in);
 	fclose(f_out);

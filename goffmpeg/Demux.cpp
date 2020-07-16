@@ -114,11 +114,13 @@ int Demux::demux(std::string filename)
 		}
 		if (avpacket.stream_index == video_index)
 		{
+			// 文件只有一条流，steam_index必须置0
 			avpacket.stream_index = 0;
 			av_interleaved_write_frame(video_fmt_ctx, &avpacket);
 		}
 		else if (avpacket.stream_index == audio_index)
 		{
+			// 文件只有一条流，steam_index必须置0
 			avpacket.stream_index = 0;
 			av_interleaved_write_frame(audio_fmt_ctx, &avpacket);
 		}

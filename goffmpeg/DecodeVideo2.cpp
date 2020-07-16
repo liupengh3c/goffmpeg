@@ -129,6 +129,9 @@ int DecodeVideo2::decode_video2(std::string input_filename, std::string output_f
 			}
 		}
 	}
+
+	/* flush the decoder */
+	decode(codec_ctx, NULL, frame, f_out);
 	std::cout << "decoded success-------" << std::endl;
 
 	avcodec_free_context(&codec_ctx);

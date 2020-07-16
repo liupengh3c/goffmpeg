@@ -22,13 +22,14 @@ int  DecodeAudio::decode(AVCodecContext* dec_ctx, AVPacket* pkt, AVFrame* frame,
 	while (ret >= 0)
 	{
 		ret = avcodec_receive_frame(dec_ctx, frame);
-		if (ret < 0)
-		{
-			return -2;
-		}
-		else if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+		
+		if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
 		{
 			return 0;
+		}
+		else if (ret < 0)
+		{
+			return -2;
 		}
 
 		data_size = av_get_bytes_per_sample(dec_ctx->sample_fmt);
@@ -165,7 +166,9 @@ int DecodeAudio::decode_audio(std::string input_filename, std::string output_fil
 
 	pkt->data = NULL;
 	pkt->size = 0;
-	decode(codec_ctx, pkt, frame, swr_ctx,f_out);
+
+	// flush the decoder
+	decode(codec_ctx, NULL, frame, swr_ctx,f_out);
 
 	fclose(f_in);
 	fclose(f_out);

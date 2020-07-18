@@ -9,6 +9,7 @@
 #include "DecodeAudio.h"
 #include "DecodeAudio2.h"
 #include "Demux_decode.h"
+#include "Encode_video.h"
 
 int strToInt(char* p)
 {
@@ -32,7 +33,8 @@ int main()
 	4. decode h264/mp4 to yuv420p(av_read_frame).\n\
 	5. decode aac to pcm(av_parser_parser2).\n\
 	6. decode aac/mp4 to pcm(av_read_frame).\n\
-	7. demux and decode mp4 to pcm + yuv420p.\n";
+	7. demux and decode mp4 to pcm + yuv420p.\n\
+	8. encode yuv420p to h264.\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -126,6 +128,23 @@ int main()
 
 				Demux_decode* decode = new Demux_decode();
 				decode->demux_decode(mp4,yuv, pcm);
+				break;
+			}
+			case 8:
+			{
+				std::string h264;
+				std::string yuv;
+
+				std::cout << "please input the yuv file path:";
+				std::cin >> yuv;
+
+				std::cout << "please input the h264 file path:";
+				std::cin >> h264;
+
+				
+
+				Encode_video* encode = new Encode_video();
+				encode->encode_video(yuv, h264);
 				break;
 			}
 			default:

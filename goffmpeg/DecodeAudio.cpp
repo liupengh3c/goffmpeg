@@ -94,19 +94,12 @@ int DecodeAudio::decode_audio(std::string input_filename, std::string output_fil
 		return -3;
 	}
 
-	// 4.打开编码器
-	ret = avcodec_open2(codec_ctx, codec, NULL);
-	if (ret < 0)
-	{
-		std::cout << "avcodec_open2 error,ret=" << ret << std::endl;
-		return -4;
-	}
 
-	// 5.打开输入、输出文件
+	// 4.打开输入、输出文件
 	f_in = fopen(input_filename.data(), "rb");
 	f_out = fopen(output_filename.data(), "wb+");
 
-	// 6. 获取输入流信息并读取文件header
+	// 5. 获取输入流信息并读取文件header
 	ret = avformat_open_input(&fmt_ctx, input_filename.data(), NULL, NULL);
 	if (ret < 0)
 	{
@@ -127,8 +120,17 @@ int DecodeAudio::decode_audio(std::string input_filename, std::string output_fil
 			break;
 		}
 	}
-	// 6.初始化重采样器
-	swr_ctx = swr_alloc_set_opts(NULL, codec_ctx->channel_layout, AV_SAMPLE_FMT_S16, codec_ctx->sample_rate, codec_ctx->channel_layout, AV_SAMPLE_FMT_FLTP, codec_ctx->sample_rate, 0, NULL);
+
+	// 6.打开编码器
+	ret = avcodec_open2(codec_ctx, codec, NULL);
+	if (ret < 0)
+	{
+		std::cout << "avcodec_open2 error,ret=" << ret << std::endl;
+		return -4;
+	}
+
+	// 7.初始化重采样器
+	swr_ctx = swr_alloc_set_opts(NULL, codec_ctx->channel_layout, AV_SAMPLE_FMT_S16, codec_ctx->sample_rate, codec_ctx->channel_layout, codec_ctx->sample_fmt, codec_ctx->sample_rate, 0, NULL);
 	ret = swr_init(swr_ctx);
 	if (ret < 0)
 	{

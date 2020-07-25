@@ -69,7 +69,7 @@ int Encode_video::encode_video(std::string input_file, std::string output_file)
 		return -1;
 	}
 
-	// 2. 分配编码器上线问
+	// 2. 分配编码器上下文
 	enc_ctx = avcodec_alloc_context3(codec);
 	if (!enc_ctx)
 	{

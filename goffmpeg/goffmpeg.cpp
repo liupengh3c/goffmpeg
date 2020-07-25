@@ -10,6 +10,7 @@
 #include "DecodeAudio2.h"
 #include "Demux_decode.h"
 #include "Encode_video.h"
+#include "Encode_audio.h"
 
 int strToInt(char* p)
 {
@@ -34,7 +35,8 @@ int main()
 	5. decode aac to pcm(av_parser_parser2).\n\
 	6. decode aac/mp4 to pcm(av_read_frame).\n\
 	7. demux and decode mp4 to pcm + yuv420p.\n\
-	8. encode yuv420p to h264.\n";
+	8. encode yuv420p to h264.\n\
+	9. encode pcm to aac.\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -141,10 +143,23 @@ int main()
 				std::cout << "please input the h264 file path:";
 				std::cin >> h264;
 
-				
-
 				Encode_video* encode = new Encode_video();
 				encode->encode_video(yuv, h264);
+				break;
+			}
+			case 9:
+			{
+				std::string pcm = "toy.pcm";
+				std::string aac = "toy.aac";
+
+				/*std::cout << "please input the pcm file path:";
+				std::cin >> pcm;
+
+				std::cout << "please input the aac file path:";
+				std::cin >> aac;*/
+
+				Encode_audio* encode = new Encode_audio();
+				encode->encode_audio(pcm, aac);
 				break;
 			}
 			default:

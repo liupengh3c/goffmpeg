@@ -12,6 +12,7 @@
 #include "Encode_video.h"
 #include "Encode_video2.h"
 #include "Encode_audio.h"
+#include "Streamer.h"
 
 int strToInt(char* p)
 {
@@ -38,7 +39,8 @@ int main()
 	7. demux and decode mp4 to pcm + yuv420p.\n\
 	8. encode yuv420p to h264(fwrite).\n\
 	9. encode yuv420p to h264(av_interleaved_write_frame).\n\
-	10. encode pcm to aac.\n";
+	10. encode pcm to aac.\n\
+	11. push video stream to server.\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -177,6 +179,17 @@ int main()
 
 				Encode_audio* encode = new Encode_audio();
 				encode->encode_audio(pcm, aac);
+				break;
+			}
+			case 11:
+			{
+				std::string flv = "lei.flv";
+
+				std::cout << "please input the flv file path:";
+				std::cin >> flv;
+
+				Streamer* stream = new Streamer();
+				stream->streamer(flv);
 				break;
 			}
 			default:

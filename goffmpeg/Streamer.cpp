@@ -12,7 +12,7 @@ int Streamer::streamer(std::string input)
 	int frame_index = 0;
 	int video_index = -1;
 
-	std::string output = "rtmp://106.13.105.231:8935/live/movie";
+	std::string output = "rtmp://106.13.105.231:8234/liupeng/video";
 
 	AVFormatContext* ifmt = NULL, * ofmt = NULL;
 

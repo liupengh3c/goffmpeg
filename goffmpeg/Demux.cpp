@@ -52,9 +52,13 @@ int Demux::demux(std::string filename)
 			{
 				aac_file.append(filename).append(".dts");
 			}
-			else
+			else if (in_stream->codecpar->codec_id == AV_CODEC_ID_AAC)
 			{
 				aac_file.append(filename).append(".aac");
+			}
+			else
+			{
+				aac_file.append(filename).append(".mp3");
 			}
 			avformat_alloc_output_context2(&audio_fmt_ctx, NULL, NULL, aac_file.data());
 			out_stream = avformat_new_stream(audio_fmt_ctx, NULL);
@@ -124,6 +128,7 @@ int Demux::demux(std::string filename)
 			avpacket.stream_index = 0;
 			av_interleaved_write_frame(audio_fmt_ctx, &avpacket);
 		}
+		
 		av_packet_unref(&avpacket);
 	}
 

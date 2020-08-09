@@ -13,6 +13,8 @@
 #include "Encode_video2.h"
 #include "Encode_audio.h"
 #include "Streamer.h"
+#include "Get_video.h"
+#include "RtmpVideo.h"
 
 int strToInt(char* p)
 {
@@ -28,19 +30,23 @@ int main()
 {
 	char input[5] = {};
 	int number = 0;
+	int over = 0;
 
 	std::string msg = "\n\nAll the funtions are:\n\
-	1. print ffmpeg informations.\n\
-	2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
-	3. decode h264 to yuv420p(av_parser_parser2).\n\
-	4. decode h264/mp4 to yuv420p(av_read_frame).\n\
-	5. decode aac to pcm(av_parser_parser2).\n\
-	6. decode aac/mp4 to pcm(av_read_frame).\n\
-	7. demux and decode mp4 to pcm + yuv420p.\n\
-	8. encode yuv420p to h264(fwrite).\n\
-	9. encode yuv420p to h264(av_interleaved_write_frame).\n\
-	10. encode pcm to aac.\n\
-	11. push video stream to server.\n";
+		1. print ffmpeg informations.\n\
+		2. demux mp4 to h264+aac/dts,you should input the mp4 path.\n\
+		3. decode h264 to yuv420p(av_parser_parser2).\n\
+		4. decode h264/mp4 to yuv420p(av_read_frame).\n\
+		5. decode aac to pcm(av_parser_parser2).\n\
+		6. decode aac/mp4 to pcm(av_read_frame).\n\
+		7. demux and decode mp4 to pcm + yuv420p.\n\
+		8. encode yuv420p to h264(fwrite).\n\
+		9. encode yuv420p to h264(av_interleaved_write_frame).\n\
+		10. encode pcm to aac.\n\
+		11. push video(local) stream to server.\n\
+		12. get webcam video to yuv420p.\n\
+		13. get webcam video and push it to rtmp server.\n\
+		14. press 'q' for quit applation.\n";
 	while (true)
 	{
 		std::cout << msg << std::endl;
@@ -192,10 +198,36 @@ int main()
 				stream->streamer(flv);
 				break;
 			}
+			case 12:
+			{
+				std::string yuv;
+				std::cout << "please input the yuv file path:";
+				std::cin >> yuv;
+
+				Get_video* video = new Get_video();
+				video->video(yuv);
+				break;
+			}
+			case 13:
+			{
+				std::string yuv;
+				std::cout << "please input the yuv file path:";
+				std::cin >> yuv;
+
+				RtmpVideo* rtmp = new RtmpVideo();
+				rtmp->rtmp_video(yuv);
+				break;
+			}
 			default:
+				over = 1;
 				break;
 		}
+		if (over == 1)
+		{
+			break;
+		}
 	}
+	return 0;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

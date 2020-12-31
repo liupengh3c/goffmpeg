@@ -9,7 +9,7 @@ extern "C"
 class RtmpVideo
 {
 public:
-	int encode(AVCodecContext* enc_ctx, AVPacket* pkt, AVFrame* frame, AVFormatContext* fmt, int index, FILE* f);
-	int rtmp_video(std::string flv);
+	int encode(AVCodecContext* enc_ctx, AVPacket* pkt, AVFrame* frame, AVFormatContext* fmt, int index);
+	int rtmp_video();
 };
 

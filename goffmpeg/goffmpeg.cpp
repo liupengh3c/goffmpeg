@@ -210,12 +210,8 @@ int main()
 			}
 			case 13:
 			{
-				std::string yuv;
-				std::cout << "please input the yuv file path:";
-				std::cin >> yuv;
-
 				RtmpVideo* rtmp = new RtmpVideo();
-				rtmp->rtmp_video(yuv);
+				rtmp->rtmp_video();
 				break;
 			}
 			default:

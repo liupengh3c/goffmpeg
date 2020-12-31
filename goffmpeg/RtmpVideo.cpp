@@ -22,7 +22,7 @@ struct SDL_Info
     SDL_Rect sdlRect;
 };
 AVStream* istream = NULL, * ostream = NULL;
-int RtmpVideo::encode(AVCodecContext* enc_ctx, AVPacket* pkt, AVFrame* frame, AVFormatContext* fmt, int index, FILE* f)
+int RtmpVideo::encode(AVCodecContext* enc_ctx, AVPacket* pkt, AVFrame* frame, AVFormatContext* fmt, int index)
 {
     int ret = 0;
 
@@ -63,7 +63,7 @@ int RtmpVideo::encode(AVCodecContext* enc_ctx, AVPacket* pkt, AVFrame* frame, AV
     }
     return 0;
 }
-int RtmpVideo::rtmp_video(std::string flv)
+int RtmpVideo::rtmp_video()
 {
     int ret = 0;
     int video_index = -1;
@@ -77,17 +77,14 @@ int RtmpVideo::rtmp_video(std::string flv)
 
     AVPacket* pkt = NULL;
 
-    FILE* f_out = NULL;
-
     AVFrame* frame = NULL, * yuv_frame = NULL;
     struct SwsContext* sws_ctx = NULL;
     struct SDL_Info display;
 
-    const char* rtmp_server = "rtmp://106.13.105.231:8234/liupeng/video";
+    const char* rtmp_server = "rtmp://106.13.105.231:8144/live/rfBd56ti2SMtYvSgD5xAV0YU99zampta7Z7S575KLkIZ9PYk";
     AVCodecContext* enc_ctx = NULL;
     AVCodec* codec = NULL;
 
-    f_out = fopen(flv.data(), "wb+");
     pkt = av_packet_alloc();
     frame = av_frame_alloc();
     yuv_frame = av_frame_alloc();
@@ -153,10 +150,7 @@ int RtmpVideo::rtmp_video(std::string flv)
     enc_ctx->time_base = AVRational{ 1, 30 };
     enc_ctx->gop_size = 12;
     enc_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
-    if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
-    {
-        enc_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-    }
+
     // 5. 获取视频流索引
     for (size_t i = 0; i < ifmt_ctx->nb_streams; i++)
     {
@@ -169,6 +163,7 @@ int RtmpVideo::rtmp_video(std::string flv)
             avcodec_parameters_from_context(ostream->codecpar, enc_ctx);
             ostream->avg_frame_rate = AVRational{ 30, 1 };
             ostream->time_base = AVRational{ 1, 30 };
+            ostream->codecpar->format = AV_PIX_FMT_YUV420P;
             ostream->codec = enc_ctx;
             break;
         }
@@ -199,8 +194,7 @@ int RtmpVideo::rtmp_video(std::string flv)
         return -5;
     }
 
-    printf("ofmt_ctx->priv_data:%v\n", ofmt_ctx->priv_data);
-
+    
 
     // 写文件头
     ret = avformat_write_header(ofmt_ctx, NULL);
@@ -209,6 +203,7 @@ int RtmpVideo::rtmp_video(std::string flv)
         std::cout << "avformat_write_header to file error,ret=" << ret << std::endl;
         return -6;
     }
+
     // 9. 初始化转换器
     sws_ctx = sws_getContext(istream->codecpar->width, istream->codecpar->height, AVPixelFormat(istream->codecpar->format), dst_width, dst_height, AV_PIX_FMT_YUV420P, SWS_BILINEAR, NULL, NULL, NULL);
     if (!sws_ctx)
@@ -261,7 +256,7 @@ int RtmpVideo::rtmp_video(std::string flv)
         memcpy(frame->data[0], pkt->data, pkt->size);
         sws_scale(sws_ctx, frame->data, frame->linesize, 0, frame->height, yuv_frame->data, yuv_frame->linesize);
         yuv_frame->pts = av_rescale_q(pkt->pts, istream->time_base, ostream->time_base);
-        encode(enc_ctx, opkt, yuv_frame, ofmt_ctx, frame_index, f_out);
+        encode(enc_ctx, opkt, yuv_frame, ofmt_ctx, frame_index);
         frame_index++;
         // 设置纹理数据
         SDL_UpdateYUVTexture(display.sdlTexture, &display.sdlRect,
@@ -273,26 +268,14 @@ int RtmpVideo::rtmp_video(std::string flv)
         SDL_RenderCopy(display.sdlRenderer, display.sdlTexture, NULL, &display.sdlRect);
         // 显示
         SDL_RenderPresent(display.sdlRenderer);
-        if (av_gettime() - start_time >= 10000000)
+        /*if (av_gettime() - start_time >= 3000000)
         {
             break;
-        }
-        // AVRational time_base = istream->time_base;
-        // AVRational time_base_q = {1, AV_TIME_BASE};
-        // int64_t pts_time = av_rescale_q(pkt->pts, time_base, time_base_q);
-        // int64_t now_time = av_gettime() - start_time;
-        // if (pts_time > now_time)
-        //     av_usleep(pts_time - now_time);
+        }*/
 
-        // std::cout << "pts_time=" << pts_time << std::endl;
-        // std::cout << "pkt->dts=" << pkt->dts << std::endl;
-        // std::cout << "pkt->pts=" << pkt->pts << std::endl;
-        // std::cout << "av_gettime() - start_time=" << av_gettime() - start_time << std::endl;
-        // std::cout << "istream->time_base.den=" << istream->time_base.den << std::endl;
-        // std::cout << "istream->time_base.num=" << istream->time_base.num << std::endl;
     }
 
-    encode(enc_ctx, opkt, NULL, ofmt_ctx, frame_index, f_out);
+    encode(enc_ctx, opkt, NULL, ofmt_ctx, frame_index);
     av_write_trailer(ofmt_ctx);
 
     sws_freeContext(sws_ctx);
@@ -306,7 +289,6 @@ int RtmpVideo::rtmp_video(std::string flv)
 
     avio_close(ofmt_ctx->pb);
     avformat_free_context(ofmt_ctx);
-    fclose(f_out);
 
     SDL_Quit();
     return 0;
